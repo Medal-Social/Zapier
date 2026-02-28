@@ -1,0 +1,21 @@
+{
+  "name": "@medal/v2-zapier",
+  "version": "1.0.9",
+  "private": true,
+  "description": "Zapier CLI integration for Medal V2",
+  "main": "index.js",
+  "scripts": {
+    "validate": "zapier validate",
+    "test": "mocha \"test/**/*.test.js\" --timeout 10000"
+  },
+  "dependencies": {
+    "zapier-platform-core": "18.2.1"
+  },
+  "devDependencies": {
+    "mocha": "^11.7.4",
+    "zapier-platform-cli": "18.2.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
