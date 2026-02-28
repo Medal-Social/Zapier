@@ -9,6 +9,10 @@ const updateDeal = require('./creates/updateDeal');
 const findContact = require('./searches/findContact');
 const findDeal = require('./searches/findDeal');
 const workspace = require('./searches/workspace');
+const listChannels = require('./triggers/listChannels');
+const listContacts = require('./triggers/listContacts');
+const listDeals = require('./triggers/listDeals');
+const listPosts = require('./triggers/listPosts');
 const { addDefaultHeaders, handleApiErrors } = require('./lib/api');
 
 const App = {
@@ -30,6 +34,12 @@ const App = {
     [workspace.key]: workspace,
     [findContact.key]: findContact,
     [findDeal.key]: findDeal,
+  },
+  triggers: {
+    [listChannels.key]: listChannels,
+    [listContacts.key]: listContacts,
+    [listDeals.key]: listDeals,
+    [listPosts.key]: listPosts,
   },
 };
 
