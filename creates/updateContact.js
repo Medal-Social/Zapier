@@ -1,5 +1,5 @@
 const { medalRequest } = require('../lib/api');
-const { requiredInput } = require('../lib/inputs');
+const { isEmptyValue, requiredTrimmedInput } = require('../lib/inputs');
 
 const UPDATE_FIELDS = [
   'email',
@@ -15,7 +15,7 @@ const UPDATE_FIELDS = [
 const buildPayload = (inputData) => {
   const payload = {};
   for (const key of UPDATE_FIELDS) {
-    if (inputData[key] !== undefined && inputData[key] !== null && inputData[key] !== '') {
+    if (!isEmptyValue(inputData[key])) {
       payload[key] = inputData[key];
     }
   }
@@ -23,7 +23,7 @@ const buildPayload = (inputData) => {
 };
 
 const perform = async (z, bundle) => {
-  const contactId = requiredInput(z, bundle, 'contact_id', 'Contact ID');
+  const contactId = requiredTrimmedInput(z, bundle, 'contact_id', 'Contact ID');
   const payload = buildPayload(bundle.inputData);
 
   if (Object.keys(payload).length === 0) {

@@ -1,7 +1,8 @@
 const { medalRequest } = require('../lib/api');
+const { optionalText } = require('../lib/inputs');
 
 const perform = async (z, bundle) => {
-  const title = (bundle.inputData.title || '').trim();
+  const title = optionalText(bundle.inputData.title);
   if (!title) {
     throw new z.errors.Error('Title is required.', 'VALIDATION_ERROR', 400);
   }

@@ -1,9 +1,9 @@
 const { medalRequest } = require('../lib/api');
-const { requiredInput } = require('../lib/inputs');
+const { requiredTrimmedInput } = require('../lib/inputs');
 
 const perform = async (z, bundle) => {
-  const postId = requiredInput(z, bundle, 'post_id', 'Post ID');
-  const scheduledAt = requiredInput(z, bundle, 'scheduled_at', 'Scheduled At');
+  const postId = requiredTrimmedInput(z, bundle, 'post_id', 'Post ID');
+  const scheduledAt = requiredTrimmedInput(z, bundle, 'scheduled_at', 'Scheduled At');
   await medalRequest(z, bundle, {
     method: 'POST',
     path: `/api/v1/posts/${encodeURIComponent(postId)}/schedule`,

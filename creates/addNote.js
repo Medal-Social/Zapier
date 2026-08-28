@@ -1,8 +1,8 @@
 const { medalRequest } = require('../lib/api');
-const { requiredInput } = require('../lib/inputs');
+const { requiredInput, requiredTrimmedInput } = require('../lib/inputs');
 
 const perform = async (z, bundle) => {
-  const contactId = requiredInput(z, bundle, 'contact_id', 'Contact ID');
+  const contactId = requiredTrimmedInput(z, bundle, 'contact_id', 'Contact ID');
   const content = requiredInput(z, bundle, 'content', 'Note Content');
   const response = await medalRequest(z, bundle, {
     method: 'POST',
