@@ -1,5 +1,5 @@
 const { medalRequest } = require('../lib/api');
-const { isEmptyValue, requiredInput } = require('../lib/inputs');
+const { isProvided, requiredInput } = require('../lib/inputs');
 
 const normalizeChannelIds = (input) => {
   if (Array.isArray(input)) {
@@ -28,8 +28,8 @@ const perform = async (z, bundle) => {
     channel_ids: channelIds,
   };
 
-  if (!isEmptyValue(bundle.inputData.title)) payload.title = bundle.inputData.title;
-  if (!isEmptyValue(bundle.inputData.type)) payload.type = bundle.inputData.type;
+  if (isProvided(bundle.inputData.title)) payload.title = bundle.inputData.title;
+  if (isProvided(bundle.inputData.type)) payload.type = bundle.inputData.type;
 
   const createResponse = await medalRequest(z, bundle, {
     method: 'POST',
@@ -42,7 +42,7 @@ const perform = async (z, bundle) => {
     throw new z.errors.Error('Failed to create post.', 'CREATE_FAILED', 500);
   }
 
-  if (!isEmptyValue(bundle.inputData.scheduled_at)) {
+  if (isProvided(bundle.inputData.scheduled_at)) {
     await medalRequest(z, bundle, {
       method: 'POST',
       path: `/api/v1/posts/${encodeURIComponent(postId)}/schedule`,

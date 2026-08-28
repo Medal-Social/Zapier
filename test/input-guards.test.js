@@ -183,6 +183,31 @@ describe('values the platform used to strip', () => {
     assert.equal('title' in requests[0].body, false, 'an empty array is not a title');
   });
 
+  // createPost's optional fields were guarded by truthiness, which skipped false
+  // and 0; the payload builders used `!== ''`, which kept them. Each has to keep
+  // its own behaviour — scheduling on a non-datetime fires a second request that
+  // fails only after the post exists, while a deal worth 0 is a real value.
+  for (const scheduledAt of [false, 0]) {
+    it(`does not schedule a post when scheduled_at is ${JSON.stringify(scheduledAt)}`, async () => {
+      const { z, requests } = makeZ();
+
+      await createPost.operation.perform(
+        z,
+        bundleWith({ content: 'Hello', channel_ids: ['channel_a'], scheduled_at: scheduledAt })
+      );
+
+      assert.equal(requests.filter((request) => request.url.endsWith('/schedule')).length, 0);
+    });
+  }
+
+  it('keeps a zero deal value in the payload', async () => {
+    const { z, requests } = makeZ();
+
+    await createDeal.operation.perform(z, bundleWith({ title: 'Acme Q2', value: 0 }));
+
+    assert.equal(requests[0].body.value, 0);
+  });
+
   const arrayInputSearches = [
     { name: 'find_contact', action: findContact, inputData: { email: [] } },
     { name: 'find_deal', action: findDeal, inputData: { title: [] } },
