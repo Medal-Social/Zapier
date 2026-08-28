@@ -1,4 +1,5 @@
 const { medalRequest } = require('../lib/api');
+const { requiredInput } = require('../lib/inputs');
 
 const normalizeChannelIds = (input) => {
   if (Array.isArray(input)) {
@@ -16,13 +17,14 @@ const normalizeChannelIds = (input) => {
 };
 
 const perform = async (z, bundle) => {
+  const content = requiredInput(z, bundle, 'content', 'Content');
   const channelIds = normalizeChannelIds(bundle.inputData.channel_ids);
   if (channelIds.length === 0) {
     throw new z.errors.Error('At least one channel ID is required.', 'VALIDATION_ERROR', 400);
   }
 
   const payload = {
-    content: bundle.inputData.content,
+    content,
     channel_ids: channelIds,
   };
 
@@ -87,6 +89,7 @@ module.exports = {
         required: true,
         list: true,
         type: 'string',
+        dynamic: 'list_channels.id.display_name',
         helpText: 'One or more Medal channel IDs to publish this content to.',
       },
       {

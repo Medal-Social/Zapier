@@ -1,4 +1,5 @@
 const { medalRequest } = require('../lib/api');
+const { requiredInput } = require('../lib/inputs');
 
 const CONTACT_OPTIONAL_FIELDS = [
   'first_name',
@@ -10,8 +11,8 @@ const CONTACT_OPTIONAL_FIELDS = [
   'email_status',
 ];
 
-const buildPayload = (inputData) => {
-  const payload = { email: inputData.email };
+const buildPayload = (inputData, email) => {
+  const payload = { email };
   for (const key of CONTACT_OPTIONAL_FIELDS) {
     if (inputData[key] !== undefined && inputData[key] !== null && inputData[key] !== '') {
       payload[key] = inputData[key];
@@ -21,7 +22,8 @@ const buildPayload = (inputData) => {
 };
 
 const perform = async (z, bundle) => {
-  const payload = buildPayload(bundle.inputData);
+  const email = requiredInput(z, bundle, 'email', 'Email');
+  const payload = buildPayload(bundle.inputData, email);
   const createResponse = await medalRequest(z, bundle, {
     method: 'POST',
     path: '/api/v1/contacts',

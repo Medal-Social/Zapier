@@ -1,4 +1,5 @@
 const { medalRequest } = require('../lib/api');
+const { requiredInput } = require('../lib/inputs');
 
 const UPDATE_FIELDS = [
   'title',
@@ -26,7 +27,7 @@ const buildPayload = (inputData) => {
 };
 
 const perform = async (z, bundle) => {
-  const dealId = bundle.inputData.deal_id;
+  const dealId = requiredInput(z, bundle, 'deal_id', 'Deal ID');
   const payload = buildPayload(bundle.inputData);
 
   if (Object.keys(payload).length === 0) {
@@ -56,7 +57,13 @@ module.exports = {
   },
   operation: {
     inputFields: [
-      { key: 'deal_id', label: 'Deal ID', required: true, type: 'string' },
+      {
+        key: 'deal_id',
+        label: 'Deal ID',
+        required: true,
+        type: 'string',
+        dynamic: 'list_deals.id.display_name',
+      },
       { key: 'title', label: 'Title', required: false, type: 'string' },
       { key: 'description', label: 'Description', required: false, type: 'text' },
       { key: 'value', label: 'Value', required: false, type: 'number' },

@@ -5,17 +5,17 @@
   "description": "Zapier CLI integration for Medal V2",
   "main": "index.js",
   "scripts": {
-    "validate": "zapier validate",
+    "validate": "zapier-platform validate",
     "test": "mocha \"test/**/*.test.js\" --timeout 10000"
   },
   "dependencies": {
-    "zapier-platform-core": "18.2.1"
+    "zapier-platform-core": "19.1.0"
   },
   "devDependencies": {
     "mocha": "^11.7.4",
-    "zapier-platform-cli": "18.2.1"
+    "zapier-platform-cli": "19.1.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=18.20"
   }
 }

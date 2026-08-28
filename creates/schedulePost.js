@@ -1,12 +1,14 @@
 const { medalRequest } = require('../lib/api');
+const { requiredInput } = require('../lib/inputs');
 
 const perform = async (z, bundle) => {
-  const postId = bundle.inputData.post_id;
+  const postId = requiredInput(z, bundle, 'post_id', 'Post ID');
+  const scheduledAt = requiredInput(z, bundle, 'scheduled_at', 'Scheduled At');
   await medalRequest(z, bundle, {
     method: 'POST',
     path: `/api/v1/posts/${encodeURIComponent(postId)}/schedule`,
     body: {
-      scheduled_at: bundle.inputData.scheduled_at,
+      scheduled_at: scheduledAt,
     },
   });
 
@@ -27,7 +29,13 @@ module.exports = {
   },
   operation: {
     inputFields: [
-      { key: 'post_id', label: 'Post ID', required: true, type: 'string' },
+      {
+        key: 'post_id',
+        label: 'Post ID',
+        required: true,
+        type: 'string',
+        dynamic: 'list_posts.id.display_name',
+      },
       { key: 'scheduled_at', label: 'Scheduled At', required: true, type: 'datetime' },
     ],
     perform,

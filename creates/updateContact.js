@@ -1,4 +1,5 @@
 const { medalRequest } = require('../lib/api');
+const { requiredInput } = require('../lib/inputs');
 
 const UPDATE_FIELDS = [
   'email',
@@ -22,7 +23,7 @@ const buildPayload = (inputData) => {
 };
 
 const perform = async (z, bundle) => {
-  const contactId = bundle.inputData.contact_id;
+  const contactId = requiredInput(z, bundle, 'contact_id', 'Contact ID');
   const payload = buildPayload(bundle.inputData);
 
   if (Object.keys(payload).length === 0) {
@@ -52,7 +53,13 @@ module.exports = {
   },
   operation: {
     inputFields: [
-      { key: 'contact_id', label: 'Contact ID', required: true, type: 'string' },
+      {
+        key: 'contact_id',
+        label: 'Contact ID',
+        required: true,
+        type: 'string',
+        dynamic: 'list_contacts.id.display_name',
+      },
       { key: 'email', label: 'Email', required: false, type: 'string' },
       { key: 'first_name', label: 'First Name', required: false, type: 'string' },
       { key: 'last_name', label: 'Last Name', required: false, type: 'string' },
