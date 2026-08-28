@@ -1,4 +1,5 @@
 const { medalRequest } = require('../lib/api');
+const { isEmptyValue, requiredInput } = require('../lib/inputs');
 
 const DEAL_OPTIONAL_FIELDS = [
   'description',
@@ -13,13 +14,13 @@ const DEAL_OPTIONAL_FIELDS = [
   'notes',
 ];
 
-const buildPayload = (inputData) => {
+const buildPayload = (inputData, title) => {
   const payload = {
-    title: inputData.title,
+    title,
   };
 
   for (const key of DEAL_OPTIONAL_FIELDS) {
-    if (inputData[key] !== undefined && inputData[key] !== null && inputData[key] !== '') {
+    if (!isEmptyValue(inputData[key])) {
       payload[key] = inputData[key];
     }
   }
@@ -28,7 +29,8 @@ const buildPayload = (inputData) => {
 };
 
 const perform = async (z, bundle) => {
-  const payload = buildPayload(bundle.inputData);
+  const title = requiredInput(z, bundle, 'title', 'Title');
+  const payload = buildPayload(bundle.inputData, title);
   const createResponse = await medalRequest(z, bundle, {
     method: 'POST',
     path: '/api/v1/deals',

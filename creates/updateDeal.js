@@ -1,4 +1,5 @@
 const { medalRequest } = require('../lib/api');
+const { isEmptyValue, requiredTrimmedInput } = require('../lib/inputs');
 
 const UPDATE_FIELDS = [
   'title',
@@ -18,7 +19,7 @@ const UPDATE_FIELDS = [
 const buildPayload = (inputData) => {
   const payload = {};
   for (const key of UPDATE_FIELDS) {
-    if (inputData[key] !== undefined && inputData[key] !== null && inputData[key] !== '') {
+    if (!isEmptyValue(inputData[key])) {
       payload[key] = inputData[key];
     }
   }
@@ -26,7 +27,7 @@ const buildPayload = (inputData) => {
 };
 
 const perform = async (z, bundle) => {
-  const dealId = bundle.inputData.deal_id;
+  const dealId = requiredTrimmedInput(z, bundle, 'deal_id', 'Deal ID');
   const payload = buildPayload(bundle.inputData);
 
   if (Object.keys(payload).length === 0) {
@@ -56,7 +57,13 @@ module.exports = {
   },
   operation: {
     inputFields: [
-      { key: 'deal_id', label: 'Deal ID', required: true, type: 'string' },
+      {
+        key: 'deal_id',
+        label: 'Deal ID',
+        required: true,
+        type: 'string',
+        dynamic: 'list_deals.id.display_name',
+      },
       { key: 'title', label: 'Title', required: false, type: 'string' },
       { key: 'description', label: 'Description', required: false, type: 'text' },
       { key: 'value', label: 'Value', required: false, type: 'number' },

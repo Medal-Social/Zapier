@@ -1,19 +1,21 @@
 const { medalRequest } = require('../lib/api');
+const { requiredInput, requiredTrimmedInput } = require('../lib/inputs');
 
 const perform = async (z, bundle) => {
-  const contactId = bundle.inputData.contact_id;
+  const contactId = requiredTrimmedInput(z, bundle, 'contact_id', 'Contact ID');
+  const content = requiredInput(z, bundle, 'content', 'Note Content');
   const response = await medalRequest(z, bundle, {
     method: 'POST',
     path: `/api/v1/contacts/${encodeURIComponent(contactId)}/notes`,
     body: {
-      content: bundle.inputData.content,
+      content,
     },
   });
 
   return {
     id: response?.data ? response.data.id : null,
     contact_id: contactId,
-    content: bundle.inputData.content,
+    content,
   };
 };
 
@@ -26,7 +28,13 @@ module.exports = {
   },
   operation: {
     inputFields: [
-      { key: 'contact_id', label: 'Contact ID', required: true, type: 'string' },
+      {
+        key: 'contact_id',
+        label: 'Contact ID',
+        required: true,
+        type: 'string',
+        dynamic: 'list_contacts.id.display_name',
+      },
       { key: 'content', label: 'Note Content', required: true, type: 'text' },
     ],
     perform,

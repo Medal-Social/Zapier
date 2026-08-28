@@ -19,6 +19,12 @@ const App = {
   version: require('./package.json').version,
   platformVersion: require('zapier-platform-core').version,
   authentication,
+  // Empty values reach perform untouched; lib/inputs.js guards the required
+  // fields that are used verbatim, so behaviour no longer depends on the
+  // platform pruning them first.
+  flags: {
+    cleanInputData: false,
+  },
   beforeRequest: [addDefaultHeaders],
   afterResponse: [handleApiErrors],
   creates: {

@@ -1,4 +1,5 @@
 const { medalRequest } = require('../lib/api');
+const { optionalText } = require('../lib/inputs');
 
 const perform = async (z, bundle) => {
   const response = await medalRequest(z, bundle, {
@@ -8,7 +9,7 @@ const perform = async (z, bundle) => {
   });
 
   const workspaces = Array.isArray(response?.data) ? response.data : [];
-  const query = (bundle.inputData.name || '').trim().toLowerCase();
+  const query = optionalText(bundle.inputData.name).toLowerCase();
 
   if (!query) return workspaces;
 

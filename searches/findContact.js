@@ -1,7 +1,8 @@
 const { medalRequest } = require('../lib/api');
+const { optionalText } = require('../lib/inputs');
 
 const perform = async (z, bundle) => {
-  const email = (bundle.inputData.email || '').trim();
+  const email = optionalText(bundle.inputData.email);
   if (!email) {
     throw new z.errors.Error('Email is required.', 'VALIDATION_ERROR', 400);
   }
