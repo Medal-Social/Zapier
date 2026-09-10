@@ -1,0 +1,10 @@
+node_modules/
+
+# Zapier build output
+build/
+*.zip
+
+# Local env / credentials — this repo has no secret scanning, so keep them out
+.env
+.env.*
+!.env.example
